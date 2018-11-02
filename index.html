@@ -5,20 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <title>Teste de web3 com jQuery e Bootstrap</title>
+    <title>Web3 Test Page using jQuery and Bootstrap</title>
 </head>
 <body>
     <div class="container">
-        <div id="conta"></div>
+        <div id="account"></div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script>
         /*
-            Obrigado equipe GoBlockchain por indicar o codigo.
-            Teste desenvolvido com base no script: https://github.com/goblockchain/DApp/blob/master/app/scripts/main.js
+            Thanks GoBlockchain for sharing his source code.
+            This test page and script was developed based on: https://github.com/goblockchain/DApp/blob/master/app/scripts/main.js
         */
-        //A cada 2 segundos checa se a conta(endereço) Ethereum foi trocada pelo usuário
+        //Within 2 seconds page checks for Ethereum account set by the user in Metamask
         $(document).ready(async () => {
             // Reload the page when user select another account in MetaMask  
             setInterval(() => {
@@ -36,18 +36,18 @@
                 try {
                     // Request account access if needed
                     await ethereum.enable()
-                    console.log("Usando nova versao");
+                    console.log("Using new version");
                     // Acccounts now exposed                  
                 } catch (error) { // User denied account access...        
                     //TODO Sweet Alert ou algo assim..
-                    alert('Precisamos da sua permissão para nos conectarmos.');
-                    $('#conta').text('Desconectado');
+                    alert('Please give us permission to access your Ethereum Wallet.');
+                    $('#account').text('Disconnected');
                 }
             } else if (window.web3) { // Legacy dapp browsers...
                 window.web3 = new Web3(web3.currentProvider)
             } else { // Non-dapp browsers..
                 //TODO Sweet Alert ou algo assim..
-                alert('Instale MetaMask para utilizar nossos serviços. Visite: metamask.io');
+                alert('In order to use our services you need to install Metamask. Please visit: metamask.io');
             }
             checkWeb3()
         });
@@ -57,14 +57,14 @@
             // Set the connect status on the app
             if (web3 && web3.isConnected()) {
                 if (web3.eth.accounts[0] == undefined)  {
-                    console.info('Falta conectar no metamask');
-                    $('#conta').text('Desconectado');  
+                    console.info('It is not connected to Metamask');
+                    $('#account').text('Disconnected');  
                 }  else {
-                    console.info('Conectado. Qual a versao do web3 injetado pelo Metamask? ' + web3.version.api);
-                    $('#conta').text('Conectado a ' + web3.eth.accounts[0]);  
+                    console.info('Connected. Which web3 version was injected by Metamask? ' + web3.version.api);
+                    $('#account').text('Connected to ' + web3.eth.accounts[0]);  
                 }
             } else {
-                $('#conta').text('Desconectado')
+                $('#account').text('Disconnected');
             }
         }
     </script>
