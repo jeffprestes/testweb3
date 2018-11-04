@@ -40,7 +40,7 @@
                     // Contas agora estão expostas                  
                 } catch (error) { // Usuário ainda não deu permissão para acessar a carteira Ethereum        
                     alert('Por favor, dê permissão para acessarmos a sua carteira Ethereum.');
-                    $('#conta').text('Disconectado');
+                    $('#conta').text('Desconectado');
                 }
             } else if (window.web3) { // Navegadores DApp antigos
                 window.web3 = new Web3(web3.currentProvider)
@@ -56,13 +56,13 @@
             if (web3 && web3.isConnected()) {
                 if (web3.eth.accounts[0] == undefined)  {
                     console.info('Não esta conectado ao Metamask');
-                    $('#conta').text('Disconectado');  
+                    $('#conta').text('Desconectado');  
                 }  else {
                     console.info('Conectado. Qual versão da lib Web3 foi injetado pelo Metamask? ' + web3.version.api);
                     $('#conta').text('Conectado a conta ' + web3.eth.accounts[0]);  
                 }
             } else {
-                $('#conta').text('Disconectado');
+                $('#conta').text('Desconectado');
             }
         }
     </script>
