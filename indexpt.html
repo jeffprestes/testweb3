@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <title>Página de Teste de Web3 com jQuery e Bootstrap 3</title>
+</head>
+<body>
+    <div class="container">
+        <div id="conta"></div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+        /*
+            Obrigado GoBlockchain por compartilhar a base para este exemplo.
+            https://github.com/goblockchain/DApp/blob/master/app/scripts/main.js
+        */
+        var conta;
+        //Checa a cada 2 segundos se a conta Ethereum foi alterada no Metamask
+        $(document).ready(async () => {
+            setInterval(() => {
+                if (web3.eth.accounts[0] !== this.conta) {
+                    conta = web3.eth.accounts[0];
+                }
+                checkWeb3();
+            }, 2000)
+        });
+
+        window.addEventListener('load', async (event) => {
+            // Navegadores com novo Metamask    
+            if (window.ethereum) {
+                window.web3 = new Web3(ethereum);
+                try {
+                    // Solicita acesso a carteira Ethereum se necessário
+                    await ethereum.enable()
+                    console.log("Usando nova versão");
+                    // Contas agora estão expostas                  
+                } catch (error) { // Usuário ainda não deu permissão para acessar a carteira Ethereum        
+                    alert('Por favor, dê permissão para acessarmos a sua carteira Ethereum.');
+                    $('#conta').text('Disconectado');
+                }
+            } else if (window.web3) { // Navegadores DApp antigos
+                window.web3 = new Web3(web3.currentProvider)
+            } else { // 
+                alert('Para utilizar os nossos serviços você precisa instalar o Metamask. Por favor, visite: metamask.io');
+            }
+            checkWeb3()
+        });
+
+        // Verifica a conexão Web3
+        function checkWeb3() {
+            // Verifica o status da conexão 
+            if (web3 && web3.isConnected()) {
+                if (web3.eth.accounts[0] == undefined)  {
+                    console.info('Não esta conectado ao Metamask');
+                    $('#conta').text('Disconectado');  
+                }  else {
+                    console.info('Conectado. Qual versão da lib Web3 foi injetado pelo Metamask? ' + web3.version.api);
+                    $('#conta').text('Conectado a conta ' + web3.eth.accounts[0]);  
+                }
+            } else {
+                $('#conta').text('Disconectado');
+            }
+        }
+    </script>
+</body>
+</html>
