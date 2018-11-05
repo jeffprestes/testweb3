@@ -23,9 +23,8 @@
         $(document).ready(async () => {
             setInterval(() => {
                 if (web3.eth.accounts[0] !== this.conta) {
-                    conta = web3.eth.accounts[0];
+                    verificaWeb3();
                 }
-                checkWeb3();
             }, 2000)
         });
 
@@ -47,11 +46,11 @@
             } else { // 
                 alert('Para utilizar os nossos serviços você precisa instalar o Metamask. Por favor, visite: metamask.io');
             }
-            checkWeb3()
+            verificaWeb3();
         });
 
         // Verifica a conexão Web3
-        function checkWeb3() {
+        function verificaWeb3() {
             // Verifica o status da conexão 
             if (web3 && web3.isConnected()) {
                 if (web3.eth.accounts[0] == undefined)  {
@@ -59,6 +58,7 @@
                     $('#conta').text('Desconectado');  
                 }  else {
                     console.info('Conectado. Qual versão da lib Web3 foi injetado pelo Metamask? ' + web3.version.api);
+                    conta = web3.eth.accounts[0];
                     $('#conta').text('Conectado a conta ' + web3.eth.accounts[0]);  
                 }
             } else {
