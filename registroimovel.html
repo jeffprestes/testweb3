@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <title>Página de Teste de Web3 com jQuery e Bootstrap 3</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Registro de imóvel</h1>
+        <br>
+        <h2>Obter proprietário imóvel</h2>
+        <div id="proprietario">
+            <form action="#" method="get" name="formPesquisa" id="formPesquisa">
+                <div>
+                    <label for="matricula">Informe o número de matrícula do imóvel: </label>
+                    <input type="number" name="matricula" id="matricula" />
+                </div>
+                <div>
+                    <button onclick="pesquisarImovel()">Pesquisar</button>
+                </div>
+            </form>
+            <div id="resultadoPesquisa"></div>
+        </div>
+        <br>
+        <hr>
+        <br>
+        <h2>Registrar um imóvel</h2>
+        <br>
+        <div id="registro">
+            <form action="#" method="POST" name="formRegistro" id="formRegistro">
+                <div>
+                    <label for="endereco">Informe o endereço do imóvel: </label>
+                    <input type="text" name="endereco" id="endereco" size="45" />
+                </div>
+                <div>
+                    <label for="nomeProprietario">Informe o nome do proprietário: </label>
+                    <input type="text" name="nomeProprietario" id="nomeProprietario" />
+                </div>
+                <div>
+                    <label for="valor">Informe o valor venal do imóvel: </label>
+                    <input type="number" name="valor" id="valor" />
+                </div>
+                <div>
+                    <button onclick="registrarImovel()">Registrar</button>
+                </div>
+            </form>
+            <br>
+            <div>
+                <div id="statusTransacao">&nbsp;</div>
+            </div>
+            
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="connectToSmartContract.js"></script>
+    <script src="abi.js"></script>
+    <script>
+        var frmPesquisa = document.formPesquisa;
+        function pesquisarImovel() {
+            event.preventDefault();
+            $("#resultadoPesquisa").html("");
+            contract.devolveNomeProprietario(frmPesquisa.matricula.value, function (erro, resultado) {
+                if (erro) {
+                    console.log("pesquisarImovel");
+                    console.error(erro);
+                    alert("Houve um erro ao pesquisar o nome do proprietário");
+                    frmPesquisa.matricula.value = "";
+                    return
+                }
+                $("#resultadoPesquisa").html("O proprietário do imóvel informado é: " + resultado);
+            })
+        }
+
+        var frmRegistro = document.formRegistro;
+        function registrarImovel() {
+            event.preventDefault();
+            $("#statusTransacao").html("&nbsp;");
+            contract.registraImovel(frmRegistro.endereco.value, frmRegistro.nomeProprietario.value, frmRegistro.valor.value, {from: web3.eth.accounts[0], gas: 3000000, value: 0}, function (erro, resultado) {
+                if (erro) {
+                    console.log("registrarImovel");
+                    console.error(erro);
+                    alert("Houve um erro ao registrar esse imovel");
+                    return
+                }
+                waitForTxToBeMined(resultado, "#statusTransacao");
+            })
+        }
+    </script>
+</body>
+</html>

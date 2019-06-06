@@ -36,6 +36,8 @@ function waitForTxToBeMined(txHash, objStatus) {
                 $(objStatus).html("There was an error - Transaction hash: " + txHash + " final status: " + txReceipt.status);            
             }
         } else {
+            $(objStatus).css("background-color", "yellow");
+            $(objStatus).text("Transaction sent. Wait until it is mined. Transaction hash: " + txHash);
             window.setTimeout(waitForTxToBeMined, 1500, txHash, objStatus);
         }
     });
